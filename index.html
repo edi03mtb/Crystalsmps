@@ -727,16 +727,31 @@
   }
 
   // Contor de vizite - real, comun pentru toti vizitatorii (serviciu extern gratuit)
+  // countapi.xyz (folosit inainte) s-a inchis definitiv - am trecut pe un inlocuitor activ
   (function(){
     const numEl = document.getElementById('visitsNum');
     if(!numEl) return;
-    fetch('https://api.countapi.xyz/hit/crystalsmps-net/vizite-site')
+
+    function showLocalFallback(){
+      // daca serviciul extern nu raspunde, aratam totusi un numar (doar local, in acest browser)
+      let local = parseInt(localStorage.getItem('crystalsmp_local_visits') || '0', 10);
+      local += 1;
+      localStorage.setItem('crystalsmp_local_visits', local);
+      numEl.textContent = local.toLocaleString('ro-RO');
+    }
+
+    fetch('https://countapi.mileshilliard.com/api/v1/hit/crystalsmps-net-vizite-site')
       .then(r => r.json())
       .then(data => {
-        numEl.textContent = data.value.toLocaleString('ro-RO');
+        const val = (data && (data.value ?? data.count));
+        if(typeof val === 'number'){
+          numEl.textContent = val.toLocaleString('ro-RO');
+        } else {
+          showLocalFallback();
+        }
       })
       .catch(() => {
-        numEl.textContent = '—';
+        showLocalFallback();
       });
   })();
 
