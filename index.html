@@ -495,8 +495,8 @@
 
 <script>
   // Countdown - seteaza data de lansare estimata aici
-  const launchDate = new Date();
-  launchDate.setDate(launchDate.getDate() + 304);
+  // Data de lansare FIXĂ - timpul curge real, indiferent cand deschizi site-ul
+  const launchDate = new Date('2027-06-22T00:00:00Z');
 
   function updateCountdown(){
     const now = new Date();
